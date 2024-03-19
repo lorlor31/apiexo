@@ -1,0 +1,11 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+	<main class="container my-3">
+		{{form_start(orderForm)}}
+
+			{{form_rest(orderForm)}}
+			<button class="btn btn-danger"  type="submit">Créer la commande</button>
+		{{form_end(orderForm)}}
+	</main>
+{% endblock %}
