@@ -18,96 +18,28 @@ class Order
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['orderLinked'])]
+    #[Groups(['orderLink'])]
     private ?int $id = null;
-
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Groups(['orderLinked'])]
-    private ?\DateTimeInterface $date = null;
-
-    #[ORM\Column]
-    #[Groups(['orderLinked'])]
-    private ?bool $delivered = null;
-
-    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    #[Groups(['orderLinked'])]
-    private ?\DateTimeInterface $delivery_order = null;
-
-    #[ORM\ManyToMany(targetEntity: Product::class, inversedBy: 'y')]
-    private Collection $products;
 
     #[ORM\ManyToOne(inversedBy: 'orders')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Customer $customer = null;
 
+    #[ORM\ManyToMany(targetEntity: Product::class, inversedBy: 'orders')]
+    private Collection $product;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Groups(['orderLink'])]
+    private ?\DateTimeInterface $order_date = null;
+
     public function __construct()
     {
-        $this->products = new ArrayCollection();
+        $this->product = new ArrayCollection();
     }
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getDate(): ?\DateTimeInterface
-    {
-        return $this->date;
-    }
-
-    public function setDate(\DateTimeInterface $date): static
-    {
-        $this->date = $date;
-
-        return $this;
-    }
-
-    public function isDelivered(): ?bool
-    {
-        return $this->delivered;
-    }
-
-    public function setDelivered(bool $delivered): static
-    {
-        $this->delivered = $delivered;
-
-        return $this;
-    }
-
-    public function getDeliveryOrder(): ?\DateTimeInterface
-    {
-        return $this->delivery_order;
-    }
-
-    public function setDeliveryOrder(?\DateTimeInterface $delivery_order): static
-    {
-        $this->delivery_order = $delivery_order;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Product>
-     */
-    public function getProducts(): Collection
-    {
-        return $this->products;
-    }
-
-    public function addProduct(Product $product): static
-    {
-        if (!$this->products->contains($product)) {
-            $this->products->add($product);
-        }
-
-        return $this;
-    }
-
-    public function removeProduct(Product $product): static
-    {
-        $this->products->removeElement($product);
-
-        return $this;
     }
 
     public function getCustomer(): ?Customer
@@ -118,6 +50,42 @@ class Order
     public function setCustomer(?Customer $customer): static
     {
         $this->customer = $customer;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Product>
+     */
+    public function getProduct(): Collection
+    {
+        return $this->product;
+    }
+
+    public function addProduct(Product $product): static
+    {
+        if (!$this->product->contains($product)) {
+            $this->product->add($product);
+        }
+
+        return $this;
+    }
+
+    public function removeProduct(Product $product): static
+    {
+        $this->product->removeElement($product);
+
+        return $this;
+    }
+
+    public function getOrderDate(): ?\DateTimeInterface
+    {
+        return $this->order_date;
+    }
+
+    public function setOrderDate(\DateTimeInterface $order_date): static
+    {
+        $this->order_date = $order_date;
 
         return $this;
     }

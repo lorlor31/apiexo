@@ -8,7 +8,10 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
+#[ORM\Table(name: '`product`')]
+#[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
+
 #[Groups(['product'])]
 class Product
 {
@@ -34,13 +37,19 @@ class Product
     #[ORM\Column]
     private ?bool $available = null;
 
-    #[ORM\ManyToMany(targetEntity: Order::class, mappedBy: 'products')]
-    private Collection $y;
+    #[Groups(['prout'])]
+    #[ORM\ManyToOne(inversedBy: 'products')]
+    private ?Brand $brand = null;
+
+    #[ORM\ManyToMany(targetEntity: Order::class, mappedBy: 'product')]
+    private Collection $orders;
 
     public function __construct()
     {
-        $this->y = new ArrayCollection();
+        $this->orders = new ArrayCollection();
     }
+
+    
 
     public function getId(): ?int
     {
@@ -95,30 +104,44 @@ class Product
         return $this;
     }
 
+    public function getBrand(): ?Brand
+    {
+        return $this->brand;
+    }
+
+    public function setBrand(?Brand $brand): static
+    {
+        $this->brand = $brand;
+
+        return $this;
+    }
+
     /**
      * @return Collection<int, Order>
      */
-    public function getY(): Collection
+    public function getOrders(): Collection
     {
-        return $this->y;
+        return $this->orders;
     }
 
-    public function addY(Order $y): static
+    public function addOrder(Order $order): static
     {
-        if (!$this->y->contains($y)) {
-            $this->y->add($y);
-            $y->addProduct($this);
+        if (!$this->orders->contains($order)) {
+            $this->orders->add($order);
+            $order->addProduct($this);
         }
 
         return $this;
     }
 
-    public function removeY(Order $y): static
+    public function removeOrder(Order $order): static
     {
-        if ($this->y->removeElement($y)) {
-            $y->removeProduct($this);
+        if ($this->orders->removeElement($order)) {
+            $order->removeProduct($this);
         }
 
         return $this;
     }
+
+  
 }
