@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class MainController extends AbstractController
 {
-    #[Route('/orders/add', name: 'app_order_add',methods:['GET','POST'])]
+    #[Route('/orders/add', name: 'app_order_add',methods:['GET'])]
     public function add(EntityManagerInterface $em, Request $request)
     {
         $order= new Order ;
