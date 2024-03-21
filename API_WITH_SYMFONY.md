@@ -15,6 +15,7 @@ Exemple :
 
 ### On récupère les JSON grâce à la méthode ->json() de l'AbstractController
     `return $this->json($data, $status = 200, $headers = [], $context = []);`
+    
     $data = données à convertir en json
     $status = code http ou réponse http
     $headers = headers éventuels par exemple pour la redirection
@@ -24,11 +25,15 @@ Exemple :
 - La route est en POST !
 - Bien typeHinter Request, Serializer
 - On récupère la data avec getContent()
-        $data = $request->getContent();
+        ``` $data = $request->getContent();
         $product = $serializer->deserialize($data, product::class, 'json');
         $entityManager->persist($product);
         $entityManager->flush();
-        return $this->json($product, Response::HTTP_CREATED, ["Location" => $this->generateUrl("app_products")]);
+        return $this->json(
+            $product, 
+            Response::HTTP_CREATED, 
+            ["Location" => $this->generateUrl("app_products")]
+            ); ```
 
 ## Serializer et normalizer
 
