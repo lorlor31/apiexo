@@ -29,7 +29,7 @@ class MainController extends AbstractController
     #[Route('/', name: 'app_home',methods:['GET'])]
     public function home(EntityManagerInterface $em, Request $request, ProductRepository $productRepos)
     {
-        $product= $productRepos->find(1);
-        return $this->render('home.html.twig', ['product' => $product]);
+        $products= $productRepos->findAll();
+        return $this->render('home.html.twig', ['products' => $products]);
     }
 }

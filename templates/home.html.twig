@@ -5,6 +5,8 @@
 {% block body %}
 
 <div class="example-wrapper">
+{% for product in products %}
 <li> {{product.name}} </li>
+{% endfor %}
 </div>
 {% endblock %}
