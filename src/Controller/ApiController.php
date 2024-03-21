@@ -42,40 +42,33 @@ class ApiController extends AbstractController
     SerializerInterface $serializer, 
     EntityManagerInterface $entityManager, 
     // ValidatorInterface $validator,
-    ProductNormalizer $productNormalizer,
     BrandRepository $brandRepos): JsonResponse
     {
 
-$jsonTest= 
-{
-"name"	: "pomme",
-"brand_id"	: 1,
-"price"	:1.2	
-"color"	:"rouge" ,
-"available": true
+// $jsonTest= 
+// {
+// "name"	: "cerise",
+// "brand_id"	: 1,
+// "price"	:1.2	,
+// "color"	:"rouge" ,
+// "available": true
 
-}
-
+// }
 
         // je récupère le json en brut dans la requête
         $data = $request->getContent();
-        $brand=$brandRepos->find(1);
-        $product = $serializer->deserialize($data, product::class, 'json');
-
-        // dd($brand);
-        // $data=$productNormalizer->getSupportedTypes("coucou");
         //  gérer le cas ou le json n'est pas au bon format
-        // try {
-        //     // je transforme le json brut en entité show
-        //     $product = $serializer->deserialize($data, product::class, 'json');
-        // } catch (NotEncodableValueException $exception) {
-        //     return $this->json([
-        //         "error" =>
-        //         ["message" => $exception->getMessage()]
-        //     ], Response::HTTP_BAD_REQUEST);
-        // }
+        try {
+            $product = $serializer->deserialize($data, Product::class, 'json');
 
-        // // on check s'il y a des erreurs de validations
+        } catch (NotEncodableValueException $exception) {
+            return $this->json([
+                "error" =>
+                ["message" => $exception->getMessage()]
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        // on check s'il y a des erreurs de validations
         // $errors = $validator->validate($show);
         // if (count($errors) > 0) {
 
@@ -92,10 +85,14 @@ $jsonTest=
         $entityManager->persist($product);
 
         $entityManager->flush();
-
-        //  appeler les films en bdd
-        return $this->json($product, Response::HTTP_CREATED, ["Location" => $this->generateUrl("app_products")]);
+        return $this->json(
+            $product, 
+            Response::HTTP_CREATED, 
+            ["Location" => $this->generateUrl("app_products")], 
+            ["groups" => ["product", "brandLinked"]]
+        );
     }
+
 
 
 
