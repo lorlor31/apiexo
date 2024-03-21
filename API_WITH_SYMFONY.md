@@ -25,12 +25,13 @@ Exemple :
 - La route est en POST !
 - Bien typeHinter Request, Serializer
 - On récupère la data avec getContent()
+
         ``` 
-        $data = $request->getContent();\
-        $product = $serializer->deserialize($data, product::class, 'json');\
-        $entityManager->persist($product);\
-        $entityManager->flush();\
-        return $this->json(\
+            $data = $request->getContent();\
+            $product = $serializer->deserialize($data, product::class, 'json');\
+            $entityManager->persist($product);\
+            $entityManager->flush();\
+            return $this->json(\
             $product, \
             Response::HTTP_CREATED, \
             ["Location" => $this->generateUrl("app_products")]\
