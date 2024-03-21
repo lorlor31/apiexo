@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Order;
 use App\Form\OrderType;
+use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -23,7 +24,12 @@ class MainController extends AbstractController
         dd($order);
         }
         return $this->render('order/add.html.twig', ['orderForm' => $form]);
+    }
 
-
+    #[Route('/', name: 'app_home',methods:['GET'])]
+    public function home(EntityManagerInterface $em, Request $request, ProductRepository $productRepos)
+    {
+        $product= $productRepos->find(1);
+        return $this->render('home.html.twig', ['product' => $product]);
     }
 }
