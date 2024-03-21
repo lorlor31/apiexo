@@ -38,7 +38,7 @@ class ApiController extends AbstractController
 
     #[Route('/api/products/', name: 'app_product_create', methods: ['POST'])]
     public function create(
-    // Request $request, 
+    Request $request, 
     SerializerInterface $serializer, 
     EntityManagerInterface $entityManager, 
     // ValidatorInterface $validator,
@@ -46,32 +46,34 @@ class ApiController extends AbstractController
     BrandRepository $brandRepos): JsonResponse
     {
 
-// $jsonTest= 
-// {
-// "name"	: "pomme",
-// "brand_id"	: 1,
-// "price"	:1.2	
-// "color"	:"rouge" ,
-// "available": true
+$jsonTest= 
+{
+"name"	: "pomme",
+"brand_id"	: 1,
+"price"	:1.2	
+"color"	:"rouge" ,
+"available": true
 
-// }
+}
 
 
         // je récupère le json en brut dans la requête
-        // $data = $request->getContent();
+        $data = $request->getContent();
         $brand=$brandRepos->find(1);
+        $product = $serializer->deserialize($data, product::class, 'json');
+
         // dd($brand);
-        $data=$productNormalizer->getSupportedTypes("coucou");
+        // $data=$productNormalizer->getSupportedTypes("coucou");
         //  gérer le cas ou le json n'est pas au bon format
-        try {
-            // je transforme le json brut en entité show
-            $product = $serializer->deserialize($data, product::class, 'json');
-        } catch (NotEncodableValueException $exception) {
-            return $this->json([
-                "error" =>
-                ["message" => $exception->getMessage()]
-            ], Response::HTTP_BAD_REQUEST);
-        }
+        // try {
+        //     // je transforme le json brut en entité show
+        //     $product = $serializer->deserialize($data, product::class, 'json');
+        // } catch (NotEncodableValueException $exception) {
+        //     return $this->json([
+        //         "error" =>
+        //         ["message" => $exception->getMessage()]
+        //     ], Response::HTTP_BAD_REQUEST);
+        // }
 
         // // on check s'il y a des erreurs de validations
         // $errors = $validator->validate($show);
